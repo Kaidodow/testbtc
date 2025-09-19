@@ -3,205 +3,133 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bitcoin – Prix en direct & Graphique 5 ans</title>
+  <title>JUSTIN MIROUX — Couleurs !</title>
   <style>
     :root{
-      --bg:#0b1220; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --line:#1f2937; --acc:#22d3ee;
+      --speed: 8s;         /* vitesse de l'animation */
+      --bg-speed: 20s;     /* vitesse du fond */
+      --pad: clamp(16px, 4vw, 48px);
     }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans",sans-serif; background:radial-gradient(1200px 800px at 70% -10%, #1f2937 0%, var(--bg) 40%); color:var(--ink); min-height:100svh; display:grid; place-items:center; padding:20px}
-    .wrap{width:min(1100px,100%)}
-    header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px}
-    h1{margin:0; font-size:clamp(22px,3vw,28px)}
-    .sub{color:var(--muted); font-size:14px}
-    .card{background:linear-gradient(180deg,#0b1020, var(--card)); border:1px solid var(--line); border-radius:20px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    .top{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
-    .price{font-size:40px; font-weight:800}
-    .chg{font-weight:600; padding:4px 8px; border-radius:999px; font-size:14px}
-    .chg.up{background:rgba(34,197,94,.15); color:#86efac; border:1px solid rgba(34,197,94,.35)}
-    .chg.down{background:rgba(239,68,68,.15); color:#fca5a5; border:1px solid rgba(239,68,68,.35)}
-    .muted{color:var(--muted)}
-    .row{display:grid; grid-template-columns:1fr; gap:16px}
-    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    button, select{
-      background:transparent; color:var(--ink); border:1px solid #334155; padding:8px 10px; border-radius:12px; cursor:pointer;
+
+    /* Page plein écran centrée */
+    body{
+      margin:0;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      background:
+        radial-gradient(60vmax 60vmax at 10% 20%, #ffedd5 0 20%, transparent 40%),
+        radial-gradient(60vmax 60vmax at 90% 80%, #e0f2fe 0 20%, transparent 40%),
+        conic-gradient(from 0turn, #ff6b6b, #f7b801, #6ee7b7, #60a5fa, #c084fc, #ff6b6b);
+      background-size: cover, cover, 200% 200%;
+      animation: bgShift var(--bg-speed) linear infinite;
     }
-    button:hover{border-color:#475569}
-    canvas{width:100%; height:420px}
-    .footer{margin-top:10px; color:var(--muted); font-size:12px}
-    .err{color:#fda4af}
+
+    @keyframes bgShift{
+      0%   { background-position: center, center, 0% 50%; }
+      50%  { background-position: center, center, 100% 50%; }
+      100% { background-position: center, center, 0% 50%; }
+    }
+
+    /* Carte translucide pour faire ressortir le texte */
+    .card{
+      padding: var(--pad);
+      border-radius: 28px;
+      backdrop-filter: blur(8px) saturate(130%);
+      -webkit-backdrop-filter: blur(8px) saturate(130%);
+      background: rgba(255,255,255,0.10);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.20),
+        inset 0 0 0 2px rgba(255,255,255,0.20);
+      text-align:center;
+    }
+
+    h1{
+      margin:0;
+      line-height:0.9;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-weight: 900;
+      font-stretch: expanded;
+      font-size: clamp(48px, 12vw, 180px);
+      letter-spacing: .02em;
+
+      /* Texte arc-en-ciel animé */
+      background: linear-gradient(90deg,
+        #ff3d3d, #ff8a00, #ffd400, #40e0d0, #3cb0ff, #7a5cff, #ff3dff, #ff3d3d);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbow var(--speed) linear infinite;
+
+      /* Lueur multicolore pour "plein de couleurs" */
+      text-shadow:
+        0 0 12px rgba(255, 255, 255, 0.45),
+        0 0 30px rgba(255, 0, 128, 0.35),
+        0 0 50px rgba(0, 170, 255, 0.35);
+    }
+
+    @keyframes rainbow{
+      from { background-position:   0% 50%; }
+      to   { background-position: 100% 50%; }
+    }
+
+    /* Petite ligne arc-en-ciel décorative */
+    .underline{
+      margin-top: clamp(8px, 1.5vw, 16px);
+      height: clamp(8px, 1.2vw, 14px);
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        #ff6b6b, #f7b801, #6ee7b7, #60a5fa, #c084fc, #ff6b6b);
+      background-size: 200% 100%;
+      animation: rainbow var(--speed) linear infinite reverse;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+
+    /* Confettis simples en CSS pour encore plus de couleurs */
+    .confetti{
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .confetti span{
+      position:absolute;
+      width: 10px; height: 14px;
+      top:-20px;
+      left: var(--x);
+      background: var(--c);
+      transform: rotate(var(--r));
+      animation: fall calc(4s + var(--t)*2s) linear infinite;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.2));
+      border-radius: 2px;
+    }
+    @keyframes fall{
+      to { transform: translateY(110vh) rotate(calc(var(--r) + 1turn)); }
+    }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Bitcoin – Prix en direct</h1>
-        <div class="sub">Source: Binance public API • Paire: <code id="pairLabel">BTCEUR</code></div>
-      </div>
-      <div class="controls">
-        <select id="pair">
-          <option value="BTCEUR" selected>EUR (BTCEUR)</option>
-          <option value="BTCUSDT">USDT (BTCUSDT)</option>
-          <option value="BTCBUSD">BUSD (BTCBUSD)</option>
-          <option value="BTCGBP">GBP (BTCGBP)</option>
-        </select>
-        <button id="refresh">↻ Actualiser</button>
-      </div>
-    </header>
-
-    <section class="card row">
-      <div class="top">
-        <div class="price" id="livePrice">—</div>
-        <div class="chg" id="liveChange">—</div>
-        <div class="muted" id="status">Chargement…</div>
-      </div>
-      <canvas id="chart"></canvas>
-      <div class="footer">
-        <div id="updated">—</div>
-        <div class="err" id="error"></div>
-      </div>
-    </section>
+  <div class="card" role="img" aria-label="JUSTIN MIROUX en lettres arc-en-ciel">
+    <h1>JUSTIN&nbsp;MIROUX</h1>
+    <div class="underline" aria-hidden="true"></div>
   </div>
 
+  <!-- Génère des confettis colorés en JS pur (optionnel) -->
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
   <script>
-    const $ = s => document.querySelector(s);
-    const pairSel = $('#pair');
-    const pairLabel = $('#pairLabel');
-    const priceEl = $('#livePrice');
-    const chgEl = $('#liveChange');
-    const statusEl = $('#status');
-    const updEl = $('#updated');
-    const errEl = $('#error');
-    const refreshBtn = $('#refresh');
-
-    let chart, lastClose = null, pollHandle = null;
-
-    function fmt(n, sym){
-      const f = new Intl.NumberFormat('fr-BE', { style:'currency', currency: sym || 'EUR', maximumFractionDigits: 2 });
-      return f.format(n);
+    // Ajoute ~80 confettis de couleurs différentes
+    const colors = ["#ff3d3d","#ff8a00","#ffd400","#00d4ff","#3cb0ff","#7a5cff","#ff3dff","#22c55e","#ef4444","#eab308","#06b6d4","#a855f7"];
+    const c = document.getElementById("confetti");
+    for(let i=0;i<80;i++){
+      const s=document.createElement("span");
+      s.style.setProperty("--x", Math.random()*100+"vw");
+      s.style.setProperty("--t", Math.random()); // temps variable
+      s.style.setProperty("--r", (Math.random()*360).toFixed(1)+"deg");
+      s.style.setProperty("--c", colors[i % colors.length]);
+      c.appendChild(s);
     }
-
-    function currencyForPair(p){
-      if(p.endsWith('EUR')) return 'EUR';
-      if(p.endsWith('USDT')||p.endsWith('BUSD')) return 'USD';
-      if(p.endsWith('GBP')) return 'GBP';
-      return 'USD';
-    }
-
-    // Binance endpoints
-    const tickerUrl = sym => `https://api.binance.com/api/v3/ticker/price?symbol=${sym}`;
-    const klinesUrl = (sym, interval, startMs, endMs, limit=1000) => `https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${interval}&startTime=${startMs}&endTime=${endMs}&limit=${limit}`;
-
-    async function fetchLive(sym){
-      const r = await fetch(tickerUrl(sym));
-      if(!r.ok) throw new Error('Ticker non disponible');
-      const j = await r.json();
-      return parseFloat(j.price);
-    }
-
-    async function fetch5yDaily(sym){
-      const now = Date.now();
-      const fiveYearsMs = Math.round(365.25*5*24*3600*1000);
-      const start = now - fiveYearsMs;
-      const interval = '1d';
-      const max = 1000; // Binance max items per call
-      let from = start, out = [];
-      while(from < now){
-        const to = Math.min(from + max*24*3600*1000, now);
-        const url = klinesUrl(sym, interval, from, to, max);
-        const r = await fetch(url);
-        if(!r.ok) throw new Error('Historique indisponible');
-        const chunk = await r.json();
-        out = out.concat(chunk);
-        if(chunk.length === 0) break;
-        // kline format: [ openTime, open, high, low, close, volume, closeTime, ... ]
-        const lastOpenTime = chunk[chunk.length-1][0];
-        from = lastOpenTime + 24*3600*1000; // next day
-      }
-      return out.map(k => ({ t: k[0], c: parseFloat(k[4]) }));
-    }
-
-    function drawChart(points, sym){
-      const ctx = document.getElementById('chart').getContext('2d');
-      const data = points.map(p => ({ x: p.t, y: p.c }));
-      const cur = currencyForPair(sym);
-      if(chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: { datasets: [{ label: `BTC/${cur} – 5 ans`, data, tension: .15, borderWidth: 2, pointRadius: 0 }] },
-        options: {
-          animation:false,
-          interaction:{mode:'index', intersect:false},
-          scales: {
-            x: { type:'time', time:{ unit:'month' }, ticks:{ maxRotation:0, autoSkip:true } },
-            y: { ticks: { callback: v => new Intl.NumberFormat('fr-BE',{style:'currency', currency:cur, maximumFractionDigits:0}).format(v) }, beginAtZero:false }
-          },
-          plugins: {
-            legend: { display:false },
-            tooltip: {
-              callbacks: {
-                label: ctx => `${fmt(ctx.parsed.y, cur)} le ${new Date(ctx.parsed.x).toLocaleDateString('fr-BE')}`
-              }
-            }
-          }
-        }
-      });
-    }
-
-    async function loadAll(){
-      const sym = pairSel.value;
-      pairLabel.textContent = sym;
-      errEl.textContent = '';
-      statusEl.textContent = 'Chargement de l\'historique…';
-      refreshBtn.disabled = true;
-      try{
-        const history = await fetch5yDaily(sym);
-        drawChart(history, sym);
-        lastClose = history.at(-1)?.c ?? null;
-        statusEl.textContent = 'Historique à jour.';
-        updEl.textContent = `Mise à jour: ${new Date().toLocaleString('fr-BE', {dateStyle:'short', timeStyle:'short'})}`;
-      }catch(e){
-        console.error(e); errEl.textContent = 'Erreur: '+ e.message;
-      }finally{
-        refreshBtn.disabled = false;
-      }
-      await updateLive();
-      startPolling();
-    }
-
-    async function updateLive(){
-      const sym = pairSel.value;
-      const cur = currencyForPair(sym);
-      try{
-        const px = await fetchLive(sym);
-        priceEl.textContent = fmt(px, cur);
-        if(lastClose){
-          const diff = px - lastClose;
-          const pct = (diff/lastClose)*100;
-          chgEl.textContent = `${diff>=0?'+':''}${pct.toFixed(2)}% depuis clôture d\'hier`;
-          chgEl.classList.toggle('up', diff>=0);
-          chgEl.classList.toggle('down', diff<0);
-        } else {
-          chgEl.textContent = '—';
-          chgEl.classList.remove('up','down');
-        }
-        statusEl.textContent = 'Prix en direct (actualisé)';
-      }catch(e){ statusEl.textContent = 'Échec de la mise à jour du prix'; }
-    }
-
-    function startPolling(){
-      if(pollHandle) clearInterval(pollHandle);
-      pollHandle = setInterval(updateLive, 10000); // toutes les 10 s
-    }
-
-    refreshBtn.addEventListener('click', loadAll);
-    pairSel.addEventListener('change', () => { loadAll(); });
-
-    // Démarrage
-    loadAll();
   </script>
 </body>
 </html>
